@@ -2,7 +2,7 @@
 
 set -e
 
-VERSION=${VERSION:-3.20}
+VERSION=${VERSION:-3.21}
 REPOS=(${REPOS:-ngc7331/linuxserver-baseimage-alpine})
 OFFICIAL_REPO=lscr.io/linuxserver/baseimage-alpine
 RISCV_REPO=ghcr.io/unofficial-docker-for-riscv/linuxserver-baseimage-alpine
