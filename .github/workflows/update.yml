@@ -1,0 +1,51 @@
+name: update
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        version:
+          - 3.21
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.BOT_TOKEN }}
+
+      - name: Load env
+        id: env
+        run: |
+          echo "$(grep -E 'OFFICIAL_REPO=' build.sh)" >> $GITHUB_OUTPUT
+          echo "$(grep -E 'RISCV_REPO=' build.sh)" >> $GITHUB_OUTPUT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Check Upstream update
+        id: check_upstream
+        uses: ngc7331/actions@check-update
+        with:
+          cmd: docker buildx imagetools inspect ${{ steps.env.outputs.OFFICIAL_REPO }}:${{ matrix.version }} | grep -oP 'Digest:.*sha256:\K\w+'
+          tag: Alpine ${{ matrix.version }} upstream sha
+          desp: upstream image
+          git_commit: true
+          git_user: ngc7331-bot
+          git_email: 77287747+ngc7331-bot@users.noreply.github.com
+
+      - name: Check RISCV64 update
+        id: check_riscv64
+        uses: ngc7331/actions@check-update
+        with:
+          cmd: docker buildx imagetools inspect --raw ${{ steps.env.outputs.RISCV_REPO }}:${{ matrix.version }} | jq -r '.manifests[] | select(.platform.architecture == "'riscv64'") | .digest' | grep -oP 'sha256:\K\w+'
+          tag: Alpine ${{ matrix.version }} RISCV64 sha
+          desp: RISCV64 image
+          git_commit: true
+          git_user: ngc7331-bot
+          git_email: 77287747+ngc7331-bot@users.noreply.github.com

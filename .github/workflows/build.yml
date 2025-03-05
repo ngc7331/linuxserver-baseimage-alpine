@@ -2,8 +2,6 @@ name: build
 on:
   push:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *'
 
 jobs:
   build:
@@ -11,6 +9,11 @@ jobs:
     permissions:
       contents: read
       packages: write
+
+    strategy:
+      matrix:
+        version:
+          - 3.21
 
     steps:
       - uses: actions/checkout@v4
