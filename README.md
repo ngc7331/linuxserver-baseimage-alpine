@@ -2,4 +2,4 @@ Simple repo to combine [Linuxserver official amd64/arm64 docker-baseimage-alpine
 
 # Last Build Info
 - Alpine 3.21 upstream sha: 7b9a001bf53d95d996a4b3b35b1833a9d6b6f7c471e322ddaf08afb898b32761
-- Alpine 3.21 RISCV64 sha: null
+- Alpine 3.21 RISCV64 sha: 9c1c021bb05c9ace2a13dfec86a63dde9c70779083f9b8e71f6fb39165534847
